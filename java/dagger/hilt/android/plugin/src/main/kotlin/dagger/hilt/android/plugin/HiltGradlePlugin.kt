@@ -54,7 +54,7 @@ import org.gradle.api.tasks.compile.JavaCompile
  * update the superclass.
  */
 class HiltGradlePlugin @Inject constructor(
-  val providers: ProviderFactory
+  private val providers: ProviderFactory
 ) : Plugin<Project> {
   override fun apply(project: Project) {
     var configured = false

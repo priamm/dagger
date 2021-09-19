@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dagger.hilt.android.plugin.task
+package dagger.hilt.android.plugin.root
 
 import com.squareup.javapoet.ClassName
 import dagger.hilt.android.plugin.root.AggregatedAnnotation

@@ -16,6 +16,7 @@
 
 package dagger.hilt.android.plugin.task
 
+import dagger.hilt.android.plugin.root.Aggregator
 import dagger.hilt.android.plugin.root.AggregatedElementProxyGenerator
 import dagger.hilt.android.plugin.root.ComponentTreeDepsGenerator
 import dagger.hilt.android.plugin.root.ProcessedRootSentinelGenerator

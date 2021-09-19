@@ -93,49 +93,6 @@ compileKotlin {
   }
 }
 
-// Imports a shared library from the main project. The library and its classes
-// will be shadowed in the plugin's artifact.
-tasks.register("importSharedLib").configure {
-  def outputDir = file("${project.projectDir}/libs")
-  outputs.dir(outputDir)
-  doLast {
-    def buildCmd = 'bazel'
-    def buildDir = 'bazel-bin'
-    def findGenFilesParent
-    findGenFilesParent = { File dir ->
-      if (dir == null || !dir.isDirectory()) {
-        return null
-      }
-      if (new File(dir, buildDir).exists()) {
-        return dir
-      } else {
-        return findGenFilesParent(dir.parentFile)
-      }
-    }
-    // Build shared lib
-    def bazelOutput = new ByteArrayOutputStream()
-    def buildResult = exec {
-      commandLine buildCmd, 'build', 'import-shared-lib'
-      standardOutput = bazelOutput
-      errorOutput = bazelOutput
-    }
-    buildResult.assertNormalExitValue()
-    // Find shared lib Jar in build directory.
-    def genFilesDir = findGenFilesParent(project.buildFile.parentFile)
-    if (genFilesDir == null) {
-      throw new GradleException("Couldn't find build folder '$buildDir'")
-    }
-    def libPath = bazelOutput.toString().split('\n')
-      .find { line -> line.contains("$buildDir/") }.trim()
-    def inputFile = file("$genFilesDir/$libPath")
-    def outputFile = file("$outputDir/${inputFile.name}")
-    outputFile << inputFile.newInputStream()
-  }
-}
-tasks.getByName('compileKotlin').dependsOn('importSharedLib')
-
-// Task that generates a top-level property containing the version of the
-// project so that it can be used in code and at runtime.
 def pluginVersionOutDir = file("$buildDir/generated/source/plugin-version/")
 tasks.register("generatePluginVersionSource").configure {
   def version = getPublishVersion()
